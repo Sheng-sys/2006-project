@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="shijian"></h1>
+
+    <div>
+        <h3>点击获取天气</h3>
+        <button class="city" city_id="101220301">芜湖</button>
+        <button class="city" city_id="101010100">北京</button>
+        <button class="city" city_id="101110101">西安</button>
+        <button class="city" city_id="101190101">南京</button>
+        <hr>
+        <table>
+            <tr>
+                <td>城市</td>
+                <td><input type="text" id="cy"></td>
+            </tr>
+            <tr>
+                <td>天气</td>
+                <td><input type="text" id="tq"></td>
+            </tr>
+            <tr>
+                <td>湿度</td>
+                <td><input type="text" id="wd"></td>
+            </tr>
+            <tr>
+                <td>风力</td>
+                <td><input type="text" id="fl"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+    setInterval(function(){
+        var date = new Date()
+        var year = date.getFullYear() //年
+        var month = date.getMonth()+1 //月
+        if(month < 10){month = '0' + month}
+
+        var day = date.getDate() //日
+        if(day < 10){day = '0' + day}
+
+        var hours = date.getHours() //时
+        if(hours < 10){hours = '0' + hours}
+
+        var minutes = date.getMinutes() //分
+        if(minutes < 10){minutes = '0' + minutes}
+
+        var seconds = date.getSeconds()  //秒
+        if(seconds < 10){seconds = '0' + seconds}
+
+        var xingqi = date.getDay()
+
+        var shijian = year+'/'+month+'/'+day+" "+hours+':'+minutes+':'+seconds+" "+'星期'+xingqi
+        // console.log(shijian)
+        document.getElementById('shijian').innerText = shijian        
+    },1000)
+    
+    var city = document.querySelectorAll('.city')
+    
+    var cityName = ""
+    for(var i=0;i<city.length;i++){
+        city[i].addEventListener('click',function(){
+            cityName = this.attributes['city_id'].nodeValue
+            var cy = this.innerText
+            // console.log(cy)
+            var xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    var json_str = xhr.responseText
+                    var obj = JSON.parse(json_str)
+                    // console.log(obj)
+                    document.getElementById('cy').value = cy
+                    document.getElementById('tq').value = obj['now'].text
+                    document.getElementById('wd').value = obj['now'].feelsLike+'℃'
+                    document.getElementById('fl').value = obj['now'].windScale+'级'
+                }
+            }
+
+            xhr.open('GET','http://api.2006.com/api.php?cityName='+cityName)
+
+            xhr.send()
+        })
+    }
+</script>
+</html>
