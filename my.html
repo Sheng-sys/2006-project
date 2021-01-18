@@ -5,7 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body> 
-    <p>恭喜你登录成功！</p>
+<body>
+    <h1>个人中心</h1>
+
+    <h2 id="p1"> <span id="seconds">3</span>秒后获取用户信息</h2>
+    
+    <h2>上次登录时间：<span id="last_time"></span></h2>
+    <h2>用户名：<span id="username"></span></h2>
+    <h2>联系电话：<span id="tel"></span></h2>
 </body>
-</html>
+<script>
+    if(document.cookie == ""){
+        alert('未登录，即将跳转登录页面')
+        window.location.href = 'u_login.html'
+    }else{
+        num = 3;
+        var t1 = setInterval(function(){
+            console.log(num)
+            if(num==0){
+                clearInterval(t1)
+                return
+            }
+            num--
+            document.getElementById("seconds").innerText = num
+        },1000)
+        
+            var xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    var json_str = xhr.responseText
+                    var data = JSON.parse(json_str)
+                    document.getElementById("username").innerText = data.user_name
+                    document.getElementById("tel").innerText = data.tel
+                }
+            }
+
+            var cok = document.cookie
+
+            // console.log(cok)
+
+            xhr.open('POST','my.php')
+            
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+
+            xhr.send(cok)
+        
+    }
+</script>
+</html> 

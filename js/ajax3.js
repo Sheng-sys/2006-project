@@ -26,7 +26,7 @@ f.addEventListener('submit',function(ev){
                     var data = JSON.parse(json_str)
                     if(data.errno == 0){
                         alert('登录成功')
-                        window.location.href = 'my.html'
+                        window.location.href = 'jiudian.php'
                     }else{
                         alert(data.mgs)
                     }
