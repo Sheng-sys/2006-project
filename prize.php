@@ -101,7 +101,7 @@
                 })
             }else{
                 alert(code.mgs)
-                window.location.href = 'ajax3.html'
+                window.location.href = 'u_login.html'
             }
         
         })
